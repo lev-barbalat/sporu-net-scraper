@@ -1,14 +1,18 @@
 from sporuNetScraper import *
 from jokeAnalyser import *
 from datetime import timedelta, date
+import csv
+import sys
+
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
+SHORT_DATE_FORMAT = "%Y/%m/%d"
 
 PATH_TO_JOKES_FILE = r"C:\PythonExperiments"
 PATH_TO_LOG_FILE = r"C:\PythonExperiments"
 JOKES_FILE = r"\Jokes"
 JOKES_FILE_EXTENSION = ".txt"
-
+JOKES_FILE_EXTENSION_CSV = ".csv"
 
 class JokeFileExporter:
     jokes = []
@@ -31,7 +35,13 @@ class JokeFileExporter:
             current_jokes = SporuNetScraper()
             current_jokes.defineDateByDate(single_date)
             current_jokes.scrapJokes()
-            self.jokes = self.jokes + current_jokes.getJokes()
+
+            temp_jokes=current_jokes.getJokes()
+            for joke in temp_jokes:
+                counter += 1
+                date_to_write=single_date.strftime(SHORT_DATE_FORMAT)
+                self.jokes.append((counter,joke,date_to_write))
+#            self.jokes = self.jokes + current_jokes.getJokes()
             print("Importing jokes for {0}".format(single_date.strftime("%Y-%m-%d")))
 
     def write_to_file(self):
@@ -42,7 +52,11 @@ class JokeFileExporter:
             with open(path, "w", encoding="utf-8") as open_file:
                 for joke in self.jokes:
                     open_file.write(a)
-                    open_file.write(joke)
+                    open_file.write(str(joke[0]))
+                    open_file.writelines("\r\n")
+                    open_file.write(joke[1])
+                    open_file.writelines("\r\n")
+                    open_file.write(joke[2])
                     open_file.writelines("\r\n")
 
             print("{0} jokes were written sucessfully to {1}".format(len(self.jokes), path))
@@ -50,6 +64,19 @@ class JokeFileExporter:
             print("Exception occured: {0}".format(e))
 
 
+    def write_to_csv_file(self):
+        try:
+            path = PATH_TO_JOKES_FILE + JOKES_FILE + self.date_suffix_file_element + JOKES_FILE_EXTENSION_CSV
+#            print(path)
+#            a = "-" * 100 + "\r\n"
+            with open(path, 'w',encoding="utf-8") as open_file:
+                jokes_writer = csv.writer(open_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, dialect="excel")
+                for joke in self.jokes:
+                    print (joke)
+                    jokes_writer.writerow([joke])
+            print("{0} jokes were written sucessfully to {1}".format(len(self.jokes), path))
+        except Exception as e:
+            print("Exception occured: {0}".format(e))
 
 
 
@@ -58,5 +85,6 @@ end_date = datetime.datetime.now()
 start_date = end_date - datetime.timedelta(days=7)
 exporter.extract_jokes(start_date,end_date)
 exporter.write_to_file()
+#exporter.write_to_csv_file()
 
 
