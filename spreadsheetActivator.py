@@ -29,9 +29,10 @@ class googleSheetExporter:
         for joke in jokes:
             self.sheetJokes.update_cell(i,1,i-1)
             self.sheetJokes.update_cell(i, 2, joke)
-            currentJoke=jokeAnalyser(joke)
-            self.sheetJokes.update_cell(i, 3, currentJoke.lenOfJokes())
-            self.sheetJokes.update_cell(i, 4, currentJoke.numberOfWords())
+            currentJoke=JokeAnalyser(joke)
+            self.sheetJokes.update_cell(i, 3, currentJoke.lenght_of_joke())
+            self.sheetJokes.update_cell(i, 4, currentJoke.number_of_words())
+            self.sheetJokes.update_cell(i, 5, dateOfJokes.strftime("%Y-%m-%d"))
             i+=1
 
         #self.addLogRecord(len(jokes))
@@ -56,7 +57,6 @@ class googleSheetExporter:
 
     def getlastDateForJokes(self):
         lastRow=self.getCounterForSheet(self.sheetLog)
-        print(lastRow)
         return datetime.datetime.strptime(str(self.sheetLog.cell(lastRow,2).value),dateFormat)
 
 
@@ -69,7 +69,7 @@ class googleSheetExporter:
         for single_date in self.daterange(start_date, end_date):
             self.writeJokesForDate(single_date)
             counter+=1
-            print(single_date.strftime("%Y-%m-%d"))
+            print("Importing jokes for {0}".format(single_date.strftime("%Y-%m-%d")))
 
         self.addLogRecord(counter*10)
 

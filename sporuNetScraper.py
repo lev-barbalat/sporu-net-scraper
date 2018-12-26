@@ -5,11 +5,11 @@ import re
 import datetime
 
 #string constants
-end_of_joke_delimeter=r"Анонимно"
-last_delimeter=r"Aнoнимнo"
-beginningOfUrl = r"http://sporu.net/"
-suffixOfUrl=".htm"
-pathOfLocalFile=r"C:\PythonExperiments"
+END_OF_JOKE_DELIMITER= r"Анонимно"
+LAST_DELIMITER= r"Aнoнимнo"
+BEGINNING_OF_URL = r"http://sporu.net/"
+SUFFIX_OF_URL= ".htm"
+PATH_OF_LOCAL_FILE= r"C:\PythonExperiments"
 
 class SporuNetScraper:
     urlToScrape=""
@@ -20,13 +20,13 @@ class SporuNetScraper:
     def __init__(self):
         self.dateOfJokes=datetime.datetime.now()
         self.updateDateElements()
-        urlelements = [beginningOfUrl,self.dateSuffixUrlElement ,suffixOfUrl ]
+        urlelements = [BEGINNING_OF_URL, self.dateSuffixUrlElement , SUFFIX_OF_URL]
         self.urlToScrape = "".join(urlelements)
 
     def updateDateElements(self):
         self.dateSuffixUrlElement=self.dateOfJokes.strftime("%m%y/%m%d%y")
         self.dateSuffixFileElement=self.dateOfJokes.strftime("%Y%m%d")
-        urlelements = [beginningOfUrl, self.dateSuffixUrlElement, suffixOfUrl]
+        urlelements = [BEGINNING_OF_URL, self.dateSuffixUrlElement, SUFFIX_OF_URL]
         self.urlToScrape = "".join(urlelements)
 
     def defineDate(self,year,month,day):
@@ -54,13 +54,13 @@ class SporuNetScraper:
                 for child in div:
                     childID += 1
                     if childID == 3:
-                        joke=str(child.text)[4:(str(child.text)).find(end_of_joke_delimeter)].strip()
+                        joke= str(child.text)[4:(str(child.text)).find(END_OF_JOKE_DELIMITER)].strip()
                         self.jokes.append(joke)
                 tableID += 1
 
                 #handling the last joke that has different separator
                 lastIndex=len(self.jokes)-1
-                self.jokes[lastIndex]=str(self.jokes[lastIndex])[:str(self.jokes[lastIndex]).find(last_delimeter)].strip()
+                self.jokes[lastIndex]= str(self.jokes[lastIndex])[:str(self.jokes[lastIndex]).find(LAST_DELIMITER)].strip()
 
         except InvalidResponse:
             print("Proper response from the server was not received")
@@ -78,7 +78,7 @@ class SporuNetScraper:
     def serialise(self):
         try:
 
-            path=pathOfLocalFile+r"\Jokes"+self.dateSuffixFileElement+".txt"
+            path= PATH_OF_LOCAL_FILE + r"\Jokes" + self.dateSuffixFileElement + ".txt"
             a="-"*100+"\r\n"
             with open(path,"w",encoding="utf-8")  as open_file:
                 for joke in self.jokes:

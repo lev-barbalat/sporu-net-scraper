@@ -1,12 +1,12 @@
-class jokeAnalyser:
+class JokeAnalyser:
     textOfJoke=""
 
     def __init__(self,text):
         self.textOfJoke=text
 
-    def lenOfJokes(self):
+    def lenght_of_joke(self):
         return len(self.textOfJoke)
 
-    def numberOfWords(self):
+    def number_of_words(self):
         return len(self.textOfJoke.split())
 

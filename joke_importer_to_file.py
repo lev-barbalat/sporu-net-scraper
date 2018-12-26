@@ -42,7 +42,6 @@ class JokeFileExporter:
                 counter += 1
                 date_to_write=single_date.strftime(SHORT_DATE_FORMAT)
                 self.jokes.append((counter,joke,date_to_write))
-#            self.jokes = self.jokes + current_jokes.getJokes()
             print("Importing jokes for {0}".format(single_date.strftime("%Y-%m-%d")))
 
     def write_to_file(self):
@@ -68,8 +67,6 @@ class JokeFileExporter:
     def write_to_csv_file(self):
         try:
             path = PATH_TO_JOKES_FILE + JOKES_FILE + self.date_suffix_file_element + JOKES_FILE_EXTENSION_CSV
-#            print(path)
-#            a = "-" * 100 + "\r\n"
             with open(path, 'w',encoding="utf-8") as open_file:
                 jokes_writer = csv.writer(open_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL, dialect="excel")
                 for joke in self.jokes:
@@ -83,38 +80,40 @@ class JokeFileExporter:
     def write_to_file_excel(self):
         try:
             path = PATH_TO_JOKES_FILE + JOKES_FILE + self.date_suffix_file_element + JOKES_FILE_EXTENSION_XLSX
-            #            print(path)
-            #            a = "-" * 100 + "\r\n"
-
             workbook = xlsxwriter.Workbook(path)
             worksheet = workbook.add_worksheet()
 
-            # Widen the first column to make the text clearer.
-            worksheet.set_column('A:A', 20)
+            # Widen the columns to make the text clearer.
+            worksheet.set_column('A:A', 10)
+            worksheet.set_column('B:B', 100)
+            worksheet.set_column('C:C', 20)
 
             # Add a bold format to use to highlight cells.
             bold = workbook.add_format({'bold': True})
 
-            # Write some simple text.
             counter=0
             for joke in self.jokes:
                 print(joke)
                 counter+=1
                 location = "".join(["A", str(counter)])
+                worksheet.write(location, str(joke[0]))
+                location = "".join(["B", str(counter)])
                 worksheet.write(location, joke[1])
+                location = "".join(["C", str(counter)])
+                worksheet.write(location, joke[2])
 
             workbook.close()
-            print("{0} jokes were written sucessfully to {1}".format(len(self.jokes), path))
+            print("{0} jokes were written sucessfully to Excel file: {1}".format(len(self.jokes), path))
         except Exception as e:
             print("Exception occured: {0}".format(e))
 
 
-exporter= JokeFileExporter()
-end_date = datetime.datetime.now()
-start_date = end_date - datetime.timedelta(days=7)
-exporter.extract_jokes(start_date,end_date)
+#exporter= JokeFileExporter()
+#end_date = datetime.datetime.now()
+#start_date = end_date - datetime.timedelta(days=7)
+#exporter.extract_jokes(start_date,end_date)
 #exporter.write_to_file()
 #exporter.write_to_csv_file()
-exporter.write_to_file_excel()
+#exporter.write_to_file_excel()
 
 
