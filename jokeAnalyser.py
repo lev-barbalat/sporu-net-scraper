@@ -32,10 +32,12 @@ JOKE2 = " в школу на собеседование"
 class JokeAnalyser:
     textOfJoke=""
     classifications=set()
+    classification_rules=[]
 
-    def __init__(self,text):
+    def __init__(self,text,classification_rules):
         self.textOfJoke=text
         self.classifications.clear()
+        self.classification_rules=classification_rules
 
     def lenght_of_joke(self):
         return len(self.textOfJoke)
@@ -44,7 +46,7 @@ class JokeAnalyser:
         return len(self.textOfJoke.split())
 
     def classify_joke(self):
-        for rule in CLASSIFICATION_RULES:
+        for rule in self.classification_rules:
             if (rule[1] in self.textOfJoke):
                 self.classifications.add(rule[0])
                 #print("joke: {0} rule: {1}".format(rule[1], self.textOfJoke))
@@ -57,10 +59,10 @@ class JokeAnalyser:
 
 
 """
-joke_analyser=JokeAnalyser(JOKE)
+joke_analyser=JokeAnalyser(JOKE,CLASSIFICATION_RULES)
 joke_analyser.classify_joke()
 print(joke_analyser.get_classification())
-joke_analyser2=JokeAnalyser(JOKE2)
+joke_analyser2=JokeAnalyser(JOKE2,CLASSIFICATION_RULES)
 joke_analyser2.classify_joke()
 print(joke_analyser2.get_classification())
 """

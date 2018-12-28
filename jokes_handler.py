@@ -1,6 +1,7 @@
 from joke_importer_to_file import *
 import xlsxwriter
 import xlrd
+from classification_rules import *
 
 PATH_TO_JOKES_FILE = r"C:\PythonExperiments"
 PATH_TO_LOG_FILE = r"C:\PythonExperiments"
@@ -16,9 +17,10 @@ class JokesHandler():
     analysed_jokes=[]
     path=""
     analysed_path=""
+    classification_rules=[]
 
-    def __init__(self):
-        pass
+    def __init__(self, rules):
+        self.classification_rules=rules
 
     def set_path_origin(self, path_to_jokes_file):
         self.path = path_to_jokes_file
@@ -37,7 +39,7 @@ class JokesHandler():
 
     def analyse_jokes(self):
         for joke in self.jokes:
-            current_joke=JokeAnalyser(joke[1])
+            current_joke=JokeAnalyser(joke[1],self.classification_rules)
             current_joke.classify_joke()
             self.analysed_jokes.append((joke[0], joke[1], joke[2], current_joke.lenght_of_joke(), current_joke.number_of_words(),current_joke.get_classification()))
 
@@ -89,7 +91,13 @@ class JokesHandler():
 path = PATH_TO_JOKES_FILE + JOKES_FILE + JOKES_FILE_EXTENSION_XLSX
 analysed_path = PATH_TO_JOKES_FILE + ANALYSED_JOKES_FILE + JOKES_FILE_EXTENSION_XLSX
 startOfProcess  = datetime.datetime.now()
-handler=JokesHandler()
+
+#Load rules
+rules_manager = ClassificationRules()
+rules=rules_manager.get_rules()
+
+#Activate handler
+handler=JokesHandler(rules)
 handler.set_path_origin(path)
 handler.set_path_analysed(analysed_path)
 handler.load_jokes_from_excel()

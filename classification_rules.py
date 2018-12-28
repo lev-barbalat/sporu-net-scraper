@@ -24,6 +24,7 @@ class ClassificationRules:
         return self.rules
 
 
-
+"""
 rulesManager=ClassificationRules()
 print(rulesManager.get_rules())
+"""
