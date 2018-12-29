@@ -2,6 +2,7 @@ from joke_importer_to_file import *
 import xlsxwriter
 import xlrd
 from classification_rules import *
+import timeit
 
 PATH_TO_JOKES_FILE = r"C:\PythonExperiments"
 PATH_TO_LOG_FILE = r"C:\PythonExperiments"
